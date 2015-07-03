@@ -43,15 +43,15 @@ class Consignor {
     $data = curl_exec($ch);
     $info = curl_getinfo($ch);
 
-    if ($info['http_code'] != 200) {
-      $data = $this->deserializeData($data);
+    $error = $this->deserializeData($data);
+    if ($info['http_code'] != 200 || isset($error->ErrorMessages)) {
       $error_message = '';
-      if (isset($data->ErrorMessages)) {
-        $error_message .= implode(', ', $data->ErrorMessages);
+      if (isset($error->ErrorMessages)) {
+        $error_message .= implode(', ', $error->ErrorMessages);
       }
       else {
         $error_message = 'Error when getting ' . $this->ServerURL . '. Message: "';
-        $error_message .= strip_tags($data);
+        $error_message .= strip_tags($error);
         $error_message .= '" (' . $info['http_code'] . ')';
       }
       throw new \Exception($error_message);
@@ -88,4 +88,53 @@ class Consignor {
     }
   }
 
+}
+
+class ObjectManager implements \JsonSerializable {
+
+  public function __construct($Object = NULL) {
+    if (is_array($Object) || is_object($Object)) {
+      foreach ($Object as $Key => $Value) {
+        try {
+          $this->setValue($Key, $Value);
+        }
+        catch (\Exception $e) {
+          continue;
+        }
+      }
+    }
+  }
+
+  public function setValue($Key, $Value) {
+    if (!property_exists($this, $Key)) {
+      throw new \Exception("Key $Key does not exist.");
+    }
+    if (is_array($this->{$Key}) && !is_array($Value)) {
+      $this->addValue($Key, $Value);
+    }
+    else {
+      $this->{$Key} = $Value;
+    }
+  }
+
+  public function addValue($Key, $Value) {
+    if (!property_exists($this, $Key)) {
+      throw new \Exception("Key $Key does not exist.");
+    }
+    if (!is_array($this->{$Key})) {
+      throw new \Exception("Key $Key is not an array.");
+    }
+    $this->{$Key}[] = $Value;
+  }
+
+  public function getValue($Key) {
+    if (!property_exists($this, $Key)) {
+      throw new \Exception("Key $Key does not exist.");
+    }
+    return $this->{$Key};
+  }
+
+  public function jsonSerialize() {
+    return get_object_vars($this);
+  }
 }

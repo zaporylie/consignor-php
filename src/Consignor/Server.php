@@ -7,6 +7,10 @@
 
 namespace Consignor;
 
+define('CONSIGNOR_ADDRESS_KIND_ESAKRECEIVER', 1);
+define('CONSIGNOR_ADDRESS_KIND_ESAKSENDER', 2);
+define('CONSIGNOR_SHIPMENT_KIND_ESKNORMAL', 1);
+
 class ConsignorServer extends Consignor {
 
   protected $ServerRequestType = 'JSON';
@@ -35,4 +39,27 @@ class ConsignorServer extends Consignor {
     }
     return FALSE;
   }
+}
+
+class Shipment extends ObjectManager {
+  protected $ShpCSID;
+  protected $Kind = CONSIGNOR_SHIPMENT_KIND_ESKNORMAL;
+  protected $ActorCSID = 63;
+  protected $ProdConceptID;
+  protected $Addresses = array();
+  protected $Lines = array();
+}
+
+class Address extends ObjectManager {
+  public $Kind;
+  public $Name1;
+  public $Street1;
+  public $PostCode;
+  public $City;
+  public $CountryCode;
+}
+
+class Line extends ObjectManager {
+  protected $Number;
+  protected $PkgWeight;
 }
