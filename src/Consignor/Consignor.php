@@ -109,8 +109,16 @@ class ObjectManager implements \JsonSerializable {
     if (!property_exists($this, $Key)) {
       throw new \Exception("Key $Key does not exist.");
     }
-    if (is_array($this->{$Key}) && !is_array($Value)) {
+    if (is_array($this->{$Key}) && is_object($Value) && $class = $this->NestedClass($Key)) {
+      $this->{$Key}[] = new $class($Value);
+    }
+    elseif (is_array($this->{$Key}) && !is_array($Value)) {
       $this->addValue($Key, $Value);
+    }
+    elseif (is_array($this->{$Key}) && is_array($Value)) {
+      foreach ($Value as $v) {
+        $this->setValue($Key, $v);
+      }
     }
     else {
       $this->{$Key} = $Value;
@@ -127,11 +135,18 @@ class ObjectManager implements \JsonSerializable {
     $this->{$Key}[] = $Value;
   }
 
-  public function getValue($Key) {
+  public function getValue($Key, $index = NULL) {
     if (!property_exists($this, $Key)) {
       throw new \Exception("Key $Key does not exist.");
     }
+    if (is_array($this->{$Key}) && isset($index)) {
+      return $this->{$Key}[$index];
+    }
     return $this->{$Key};
+  }
+
+  protected function NestedClass($Key) {
+    return FALSE;
   }
 
   public function jsonSerialize() {

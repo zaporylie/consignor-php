@@ -64,4 +64,14 @@ class ShipmentAPI extends ConsignorServer {
     $response = $this->deserializeData($response);
     return $response->Labels[0]->Content;
   }
+
+  public function getTrackingURL() {
+    $request = $this->Request;
+    $request['command'] = 'GetTrackingURL';
+    $request['data'] = $this->serializeRequestData($this->Shipment);
+    $request['Options'] = $this->serializeRequestData($this->Options);
+    $response = $this->postRequest($request);
+    $response = $this->deserializeData($response);
+    return $response->TrackingURL;
+  }
 }

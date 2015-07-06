@@ -48,6 +48,19 @@ class Shipment extends ObjectManager {
   protected $ProdConceptID;
   protected $Addresses = array();
   protected $Lines = array();
+
+  protected function NestedClass($Key) {
+    switch ($Key) {
+      case 'Addresses':
+        return 'Consignor\Address';
+
+      case 'Lines':
+        return 'Consignor\Line';
+
+      default:
+        return FALSE;
+    }
+  }
 }
 
 class Address extends ObjectManager {
@@ -62,4 +75,22 @@ class Address extends ObjectManager {
 class Line extends ObjectManager {
   protected $Number;
   protected $PkgWeight;
+  protected $Pkgs = array();
+
+  protected function NestedClass($Key) {
+    switch ($Key) {
+      case 'Pkgs':
+        return 'Consignor\Package';
+
+      default:
+        return FALSE;
+    }
+  }
+}
+
+class Package extends ObjectManager {
+  protected $ItemNo;
+  protected $PkgNo;
+  protected $Barcode1;
+  protected $Barcode2;
 }
