@@ -67,11 +67,11 @@ class Shipment extends ObjectManager {
   protected $Lines = array();
 
   /**
-   * @param $Key
+   * @param $key
    * @return bool|string
    */
-  protected function NestedClass($Key) {
-    switch ($Key) {
+  protected function nestedClass($key) {
+    switch ($key) {
       case 'Addresses':
         return 'Consignor\Address';
 
@@ -89,12 +89,15 @@ class Shipment extends ObjectManager {
  * @package Consignor
  */
 class Address extends ObjectManager {
-  public $Kind;
-  public $Name1;
-  public $Street1;
-  public $PostCode;
-  public $City;
-  public $CountryCode;
+  protected $Kind;
+  protected $Name1;
+  protected $Street1;
+  protected $Street2;
+  protected $PostCode;
+  protected $City;
+  protected $CountryCode;
+  protected $Mobile;
+  protected $Email;
 }
 
 /**
@@ -107,11 +110,11 @@ class Line extends ObjectManager {
   protected $Pkgs = array();
 
   /**
-   * @param $Key
+   * @param $key
    * @return bool|string
    */
-  protected function NestedClass($Key) {
-    switch ($Key) {
+  protected function nestedClass($key) {
+    switch ($key) {
       case 'Pkgs':
         return 'Consignor\Package';
 

@@ -20,6 +20,7 @@ class Consignor {
 
   /**
    * @param array $data
+   *
    * @return mixed
    * @throws \Exception
    */
@@ -29,6 +30,7 @@ class Consignor {
 
   /**
    * @param array $data
+   *
    * @return mixed
    * @throws \Exception
    */
@@ -39,6 +41,7 @@ class Consignor {
   /**
    * @param $type
    * @param $data
+   *
    * @return mixed
    * @throws \Exception
    */
@@ -82,6 +85,7 @@ class Consignor {
   /**
    * @param array $data
    * @param bool $method
+   *
    * @return array|string
    */
   protected function serializeRequestData($data = array(), $method = FALSE) {
@@ -103,6 +107,7 @@ class Consignor {
   /**
    * @param $data
    * @param bool $method
+   *
    * @return mixed
    */
   protected function deserializeData($data, $method = FALSE) {
@@ -127,13 +132,13 @@ class Consignor {
 class ObjectManager implements \JsonSerializable {
 
   /**
-   * @param null $Object
+   * @param null $object
    */
-  public function __construct($Object = NULL) {
-    if (is_array($Object) || is_object($Object)) {
-      foreach ($Object as $Key => $Value) {
+  public function __construct($object = NULL) {
+    if (is_array($object) || is_object($object)) {
+      foreach ($object as $key => $value) {
         try {
-          $this->setValue($Key, $Value);
+          $this->setValue($key, $value);
         }
         catch (\Exception $e) {
           continue;
@@ -143,66 +148,70 @@ class ObjectManager implements \JsonSerializable {
   }
 
   /**
-   * @param $Key
-   * @param $Value
+   * @param $key
+   * @param $value
+   *
    * @throws \Exception
    */
-  public function setValue($Key, $Value) {
-    if (!property_exists($this, $Key)) {
-      throw new \Exception("Key $Key does not exist.");
+  public function setValue($key, $value) {
+    if (!property_exists($this, $key)) {
+      throw new \Exception("Key $key does not exist.");
     }
-    if (is_array($this->{$Key}) && is_object($Value) && $class = $this->NestedClass($Key)) {
-      $this->{$Key}[] = new $class($Value);
+    if (is_array($this->{$key}) && is_object($value) && $class = $this->nestedClass($key)) {
+      $this->{$key}[] = new $class($value);
     }
-    elseif (is_array($this->{$Key}) && !is_array($Value)) {
-      $this->addValue($Key, $Value);
+    elseif (is_array($this->{$key}) && !is_array($value)) {
+      $this->addValue($key, $value);
     }
-    elseif (is_array($this->{$Key}) && is_array($Value)) {
-      foreach ($Value as $v) {
-        $this->setValue($Key, $v);
+    elseif (is_array($this->{$key}) && is_array($value)) {
+      foreach ($value as $v) {
+        $this->setValue($key, $v);
       }
     }
     else {
-      $this->{$Key} = $Value;
+      $this->{$key} = $value;
     }
   }
 
   /**
-   * @param $Key
-   * @param $Value
+   * @param $key
+   * @param $value
+   *
    * @throws \Exception
    */
-  public function addValue($Key, $Value) {
-    if (!property_exists($this, $Key)) {
-      throw new \Exception("Key $Key does not exist.");
+  public function addValue($key, $value) {
+    if (!property_exists($this, $key)) {
+      throw new \Exception("Key $key does not exist.");
     }
-    if (!is_array($this->{$Key})) {
-      throw new \Exception("Key $Key is not an array.");
+    if (!is_array($this->{$key})) {
+      throw new \Exception("Key $key is not an array.");
     }
-    $this->{$Key}[] = $Value;
+    $this->{$key}[] = $value;
   }
 
   /**
-   * @param $Key
+   * @param $key
    * @param null $index
+   *
    * @return array
    * @throws \Exception
    */
-  public function getValue($Key, $index = NULL) {
-    if (!property_exists($this, $Key)) {
-      throw new \Exception("Key $Key does not exist.");
+  public function getValue($key, $index = NULL) {
+    if (!property_exists($this, $key)) {
+      throw new \Exception("Key $key does not exist.");
     }
-    if (is_array($this->{$Key}) && isset($index)) {
-      return $this->{$Key}[$index];
+    if (is_array($this->{$key}) && isset($index)) {
+      return $this->{$key}[$index];
     }
-    return $this->{$Key};
+    return $this->{$key};
   }
 
   /**
-   * @param $Key
+   * @param $key
+   *
    * @return bool
    */
-  protected function NestedClass($Key) {
+  protected function nestedClass($key) {
     return FALSE;
   }
 
