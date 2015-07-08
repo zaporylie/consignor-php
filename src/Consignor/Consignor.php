@@ -2,11 +2,15 @@
 
 /**
  * @file
- *
+ * Consignor class, Object manager class.
  */
 
 namespace Consignor;
 
+/**
+ * Class Consignor
+ * @package Consignor
+ */
 class Consignor {
 
   protected $ServerRequestType;
@@ -14,14 +18,30 @@ class Consignor {
   protected $ServerAPIKey;
   protected $ServerRequestHeaders;
 
+  /**
+   * @param array $data
+   * @return mixed
+   * @throws \Exception
+   */
   protected function getRequest($data = array()) {
     return $this->httpRequest('GET', $data);
   }
 
+  /**
+   * @param array $data
+   * @return mixed
+   * @throws \Exception
+   */
   protected function postRequest($data = array()) {
     return $this->httpRequest('POST', $data);
   }
 
+  /**
+   * @param $type
+   * @param $data
+   * @return mixed
+   * @throws \Exception
+   */
   private function httpRequest($type, $data) {
     $ch = curl_init();
     switch ($type) {
@@ -59,6 +79,11 @@ class Consignor {
     return $data;
   }
 
+  /**
+   * @param array $data
+   * @param bool $method
+   * @return array|string
+   */
   protected function serializeRequestData($data = array(), $method = FALSE) {
     if (!$method) {
       $method = $this->ServerRequestType;
@@ -75,6 +100,11 @@ class Consignor {
     }
   }
 
+  /**
+   * @param $data
+   * @param bool $method
+   * @return mixed
+   */
   protected function deserializeData($data, $method = FALSE) {
     if (!$method) {
       $method = $this->ServerRequestType;
@@ -90,8 +120,15 @@ class Consignor {
 
 }
 
+/**
+ * Class ObjectManager
+ * @package Consignor
+ */
 class ObjectManager implements \JsonSerializable {
 
+  /**
+   * @param null $Object
+   */
   public function __construct($Object = NULL) {
     if (is_array($Object) || is_object($Object)) {
       foreach ($Object as $Key => $Value) {
@@ -105,6 +142,11 @@ class ObjectManager implements \JsonSerializable {
     }
   }
 
+  /**
+   * @param $Key
+   * @param $Value
+   * @throws \Exception
+   */
   public function setValue($Key, $Value) {
     if (!property_exists($this, $Key)) {
       throw new \Exception("Key $Key does not exist.");
@@ -125,6 +167,11 @@ class ObjectManager implements \JsonSerializable {
     }
   }
 
+  /**
+   * @param $Key
+   * @param $Value
+   * @throws \Exception
+   */
   public function addValue($Key, $Value) {
     if (!property_exists($this, $Key)) {
       throw new \Exception("Key $Key does not exist.");
@@ -135,6 +182,12 @@ class ObjectManager implements \JsonSerializable {
     $this->{$Key}[] = $Value;
   }
 
+  /**
+   * @param $Key
+   * @param null $index
+   * @return array
+   * @throws \Exception
+   */
   public function getValue($Key, $index = NULL) {
     if (!property_exists($this, $Key)) {
       throw new \Exception("Key $Key does not exist.");
@@ -145,10 +198,19 @@ class ObjectManager implements \JsonSerializable {
     return $this->{$Key};
   }
 
+  /**
+   * @param $Key
+   * @return bool
+   */
   protected function NestedClass($Key) {
     return FALSE;
   }
 
+  /**
+   * @return array
+   *
+   * @todo This is PHP5.4 compatible only - do something about that.
+   */
   public function jsonSerialize() {
     return get_object_vars($this);
   }

@@ -10,7 +10,13 @@ namespace Consignor;
 define('CONSIGNOR_ADDRESS_KIND_ESAKRECEIVER', 1);
 define('CONSIGNOR_ADDRESS_KIND_ESAKSENDER', 2);
 define('CONSIGNOR_SHIPMENT_KIND_ESKNORMAL', 1);
+define('CONSIGNOR_TEST_ACTOR', 63);
+define('CONSIGNOR_TEST_KEY', 'sample');
 
+/**
+ * Class ConsignorServer
+ * @package Consignor
+ */
 class ConsignorServer extends Consignor {
 
   protected $ServerRequestType = 'JSON';
@@ -19,16 +25,22 @@ class ConsignorServer extends Consignor {
     'Content-type: multipart/form-data',
   );
   protected $Request = array(
-    'actor' => 63,
-    'key' => 'sample',
+    'actor' => CONSIGNOR_TEST_ACTOR,
+    'key' => CONSIGNOR_TEST_KEY,
   );
 
+  /**
+   * @param null $Request
+   */
   public function __construct($Request = NULL) {
     if (isset($Request)) {
       $this->Request = $Request;
     }
   }
 
+  /**
+   * @return bool
+   */
   public function getProducts() {
     $request = $this->Request;
     $request['command'] = 'GetProducts';
@@ -41,14 +53,23 @@ class ConsignorServer extends Consignor {
   }
 }
 
+/**
+ * Class Shipment
+ * @package Consignor
+ */
 class Shipment extends ObjectManager {
+
   protected $ShpCSID;
   protected $Kind = CONSIGNOR_SHIPMENT_KIND_ESKNORMAL;
-  protected $ActorCSID = 63;
+  protected $ActorCSID = CONSIGNOR_TEST_ACTOR;
   protected $ProdConceptID;
   protected $Addresses = array();
   protected $Lines = array();
 
+  /**
+   * @param $Key
+   * @return bool|string
+   */
   protected function NestedClass($Key) {
     switch ($Key) {
       case 'Addresses':
@@ -63,6 +84,10 @@ class Shipment extends ObjectManager {
   }
 }
 
+/**
+ * Class Address
+ * @package Consignor
+ */
 class Address extends ObjectManager {
   public $Kind;
   public $Name1;
@@ -72,11 +97,19 @@ class Address extends ObjectManager {
   public $CountryCode;
 }
 
+/**
+ * Class Line
+ * @package Consignor
+ */
 class Line extends ObjectManager {
   protected $Number;
   protected $PkgWeight;
   protected $Pkgs = array();
 
+  /**
+   * @param $Key
+   * @return bool|string
+   */
   protected function NestedClass($Key) {
     switch ($Key) {
       case 'Pkgs':
@@ -88,6 +121,10 @@ class Line extends ObjectManager {
   }
 }
 
+/**
+ * Class Package
+ * @package Consignor
+ */
 class Package extends ObjectManager {
   protected $ItemNo;
   protected $PkgNo;

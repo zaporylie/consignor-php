@@ -7,6 +7,10 @@
 
 namespace Consignor;
 
+/**
+ * Class ShipmentAPI
+ * @package Consignor
+ */
 class ShipmentAPI extends ConsignorServer {
 
   public $Shipment;
@@ -14,6 +18,10 @@ class ShipmentAPI extends ConsignorServer {
     'Labels' => 'PNG',
   );
 
+  /**
+   * @param null $ShpCSID
+   * @param null $Request
+   */
   public function __construct($ShpCSID = NULL, $Request = NULL) {
     if (isset($ShpCSID)) {
       $this->loadShipment($ShpCSID);
@@ -24,6 +32,10 @@ class ShipmentAPI extends ConsignorServer {
     parent::__construct($Request);
   }
 
+  /**
+   * @param $ShpCSID
+   * @return \Consignor\Shipment
+   */
   public function loadShipment($ShpCSID) {
     $request = $this->Request;
     $request['command'] = 'GetShipment';
@@ -34,6 +46,10 @@ class ShipmentAPI extends ConsignorServer {
     return $this->Shipment;
   }
 
+  /**
+   * @param null $data
+   * @return \Consignor\Shipment
+   */
   public function createShipment($data = NULL) {
     if (empty($data)) {
       $data = $this->Shipment;
@@ -47,14 +63,9 @@ class ShipmentAPI extends ConsignorServer {
     return $this->Shipment;
   }
 
-  public function saveShipment() {
-
-  }
-
-  public function deleteShipment() {
-
-  }
-
+  /**
+   * @return mixed
+   */
   public function getLabel() {
     $request = $this->Request;
     $request['command'] = 'ReprintLabels';
@@ -65,6 +76,9 @@ class ShipmentAPI extends ConsignorServer {
     return $response->Labels[0]->Content;
   }
 
+  /**
+   * @return mixed
+   */
   public function getTrackingURL() {
     $request = $this->Request;
     $request['command'] = 'GetTrackingURL';
