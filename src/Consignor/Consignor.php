@@ -94,6 +94,9 @@ class Consignor {
     }
     switch ($method) {
       case 'JSON':
+        if (is_object($data) && method_exists(get_class($data), 'toArray')) {
+          $data = $data->toArray();
+        }
         return json_encode($data);
 
       case 'QUERY':
@@ -129,7 +132,7 @@ class Consignor {
  * Class ObjectManager
  * @package Consignor
  */
-class ObjectManager implements \JsonSerializable {
+class ObjectManager {
 
   /**
    * @param null $object
@@ -217,10 +220,31 @@ class ObjectManager implements \JsonSerializable {
 
   /**
    * @return array
-   *
-   * @todo This is PHP5.4 compatible only - do something about that.
    */
   public function jsonSerialize() {
     return get_object_vars($this);
+  }
+
+  /**
+   * @return array
+   */
+  public function toArray() {
+    $params = get_object_vars($this);
+    foreach ($params as $key => $param) {
+      if (is_array($param)) {
+        foreach ($param as $k => $item) {
+          if (is_object($item) && method_exists(get_class($item), 'toArray')) {
+            $params[$key][$k] = $item->toArray();
+          }
+          else {
+            $params[$key][$k] = get_object_vars($this);
+          }
+        }
+      }
+      elseif (is_object($param) && method_exists(get_class($param), 'toArray')) {
+        $params[$key] = $param->toArray();
+      }
+    }
+    return $params;
   }
 }
