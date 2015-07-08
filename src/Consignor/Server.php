@@ -62,6 +62,7 @@ class Shipment extends ObjectManager {
   protected $ShpCSID;
   protected $Kind = CONSIGNOR_SHIPMENT_KIND_ESKNORMAL;
   protected $ActorCSID = CONSIGNOR_TEST_ACTOR;
+  protected $OrderNo;
   protected $ProdConceptID;
   protected $Addresses = array();
   protected $Lines = array();
