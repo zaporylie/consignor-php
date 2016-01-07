@@ -2,14 +2,17 @@
 
 /**
  * @file
+ * Shipment API.
  *
+ * @package Consignor
  */
 
 namespace Consignor;
 
+use Consignor\Structure\Shipment;
+
 /**
  * Class ShipmentAPI
- * @package Consignor
  */
 class ShipmentAPI extends ConsignorServer {
 
@@ -34,7 +37,7 @@ class ShipmentAPI extends ConsignorServer {
 
   /**
    * @param $ShpCSID
-   * @return \Consignor\Shipment
+   * @return \Consignor\Structure\Shipment
    */
   public function loadShipment($ShpCSID) {
     $request = $this->Request;
@@ -48,7 +51,7 @@ class ShipmentAPI extends ConsignorServer {
 
   /**
    * @param null $data
-   * @return \Consignor\Shipment
+   * @return \Consignor\Structure\Shipment;
    */
   public function createShipment($data = NULL) {
     if (empty($data)) {
