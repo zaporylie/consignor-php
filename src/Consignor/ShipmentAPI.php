@@ -16,7 +16,14 @@ use Consignor\Structure\Shipment;
  */
 class ShipmentAPI extends ConsignorServer {
 
+  /**
+   * @var \Consignor\Structure\Shipment
+   */
   public $Shipment;
+
+  /**
+   * @var array
+   */
   public $Options = array(
     'Labels' => 'PNG',
   );
@@ -40,11 +47,16 @@ class ShipmentAPI extends ConsignorServer {
    * @return \Consignor\Structure\Shipment
    */
   public function loadShipment($ShpCSID) {
+    // Prepare request.
     $request = $this->Request;
     $request['command'] = 'GetShipment';
     $request['data'] = $this->serializeRequestData(array('ShpCSID' => $ShpCSID));
     $request['Options'] = $this->serializeRequestData($this->Options);
+
+    // Do request.
     $response = $this->postRequest($request);
+
+    // Prepare response.
     $this->Shipment = new Shipment($this->deserializeData($response));
     return $this->Shipment;
   }
@@ -54,6 +66,7 @@ class ShipmentAPI extends ConsignorServer {
    * @return \Consignor\Structure\Shipment;
    */
   public function createShipment($data = NULL) {
+    // Prepare request.
     if (empty($data)) {
       $data = $this->Shipment;
     }
@@ -61,7 +74,11 @@ class ShipmentAPI extends ConsignorServer {
     $request['command'] = 'SubmitShipment';
     $request['data'] = $this->serializeRequestData($data);
     $request['Options'] = $this->serializeRequestData($this->Options);
+
+    // Do request.
     $response = $this->postRequest($request);
+
+    // Prepare response.
     $this->Shipment = new Shipment($this->deserializeData($response));
     return $this->Shipment;
   }
@@ -70,11 +87,16 @@ class ShipmentAPI extends ConsignorServer {
    * @return mixed
    */
   public function getLabel() {
+    // Prepare request.
     $request = $this->Request;
     $request['command'] = 'ReprintLabels';
     $request['data'] = $this->serializeRequestData($this->Shipment);
     $request['Options'] = $this->serializeRequestData($this->Options);
+
+    // Do request.
     $response = $this->postRequest($request);
+
+    // Prepare response.
     $response = $this->deserializeData($response);
     return $response->Labels[0]->Content;
   }
@@ -83,11 +105,16 @@ class ShipmentAPI extends ConsignorServer {
    * @return mixed
    */
   public function getTrackingURL() {
+    // Prepare request.
     $request = $this->Request;
     $request['command'] = 'GetTrackingURL';
     $request['data'] = $this->serializeRequestData($this->Shipment);
     $request['Options'] = $this->serializeRequestData($this->Options);
+
+    // Do request.
     $response = $this->postRequest($request);
+
+    // Prepare response.
     $response = $this->deserializeData($response);
     return $response->TrackingURL;
   }
