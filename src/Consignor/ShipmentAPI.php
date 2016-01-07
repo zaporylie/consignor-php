@@ -29,6 +29,20 @@ class ShipmentAPI extends ConsignorServer {
   );
 
   /**
+   * ShipmentAPI constructor.
+   *
+   * Adds Shipment object.
+   *
+   * @param $server
+   * @param $actor
+   * @param $key
+   */
+  public function __construct($server, $actor, $key) {
+    parent::__construct($server, $actor, $key);
+    $this->Shipment = new Shipment();
+  }
+
+  /**
    * @param $ShpCSID
    * @return \Consignor\Structure\Shipment
    */
