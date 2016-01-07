@@ -7,18 +7,41 @@
 
 namespace Consignor;
 
-define('CONSIGNOR_ADDRESS_KIND_ESAKRECEIVER', 1);
-define('CONSIGNOR_ADDRESS_KIND_ESAKSENDER', 2);
-define('CONSIGNOR_SHIPMENT_KIND_ESKNORMAL', 1);
-define('CONSIGNOR_TEST_SERVER', 'http://consignorsupport.no/ship/ShipmentServerModule.dll');
-define('CONSIGNOR_TEST_ACTOR', 63);
-define('CONSIGNOR_TEST_KEY', 'sample');
-
 /**
  * Class ConsignorServer
  * @package Consignor
  */
 class ConsignorServer extends Consignor {
+
+  /**
+   *
+   */
+  const CONSIGNOR_ADDRESS_KIND_ESAKRECEIVER = 1;
+
+  /**
+   *
+   */
+  const CONSIGNOR_ADDRESS_KIND_ESAKSENDER = 2;
+
+  /**
+   *
+   */
+  const CONSIGNOR_SHIPMENT_KIND_ESKNORMAL = 1;
+
+  /**
+   *
+   */
+  const CONSIGNOR_TEST_SERVER = 'http://consignorsupport.no/ship/ShipmentServerModule.dll';
+
+  /**
+   *
+   */
+  const CONSIGNOR_TEST_ACTOR = 63;
+
+  /**
+   *
+   */
+  const CONSIGNOR_TEST_KEY = 'sample';
 
   /**
    * @var
@@ -33,7 +56,7 @@ class ConsignorServer extends Consignor {
   /**
    * @var string
    */
-  protected $ServerURL = CONSIGNOR_TEST_SERVER;
+  protected $ServerURL = self::CONSIGNOR_TEST_SERVER;
 
   /**
    * @var array
@@ -46,8 +69,8 @@ class ConsignorServer extends Consignor {
    * @var array|null
    */
   protected $Request = array(
-    'actor' => CONSIGNOR_TEST_ACTOR,
-    'key' => CONSIGNOR_TEST_KEY,
+    'actor' => self::CONSIGNOR_TEST_ACTOR,
+    'key' => self::CONSIGNOR_TEST_KEY,
   );
 
   /**
@@ -61,6 +84,8 @@ class ConsignorServer extends Consignor {
 
   /**
    * @return bool
+   *
+   * @todo throw an Exception if no Carriers provided.
    */
   public function getProducts() {
     $request = $this->Request;
