@@ -74,12 +74,20 @@ class ConsignorServer extends Consignor {
   );
 
   /**
+   * ConsignorServer constructor.
+   *
+   * @param $server
+   * @param $actor
+   * @param $key
    * @param null $Request
    */
-  public function __construct($Request = NULL) {
+  public function __construct($server, $actor, $key, $Request = NULL) {
     if (isset($Request)) {
       $this->Request = $Request;
     }
+    $this->ServerURL = $server;
+    $this->Request['actor'] = $actor;
+    $this->Request['key'] = $key;
   }
 
   /**
