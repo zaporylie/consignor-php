@@ -100,10 +100,10 @@ class ConsignorServer extends Consignor {
     $request['command'] = 'GetProducts';
     $data = $this->postRequest($request);
     $data = $this->deserializeData($data);
-    if (isset($data->Carriers)) {
-      return $data->Carriers;
+    if (!isset($data->Carriers)) {
+      throw new \Exception('No carriers found.');
     }
-    return FALSE;
+    return $data->Carriers;
   }
 
   /**
@@ -165,7 +165,7 @@ class ConsignorServer extends Consignor {
         $error_message .= strip_tags($error);
         $error_message .= '" (' . $info['http_code'] . ')';
       }
-      throw new \Exception($error_message);
+      throw new \Exception($error_message, $info['http_code']);
     }
     return $data;
   }
